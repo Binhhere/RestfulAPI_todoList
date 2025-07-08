@@ -40,9 +40,10 @@ const registerUser = async (req, res) => {
 // login
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  console.log("Login attempt:", email, password);
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+password");
     if (!user)
       return res.status(400).json({ message: "Invalid email or password" });
 
@@ -57,6 +58,7 @@ const loginUser = async (req, res) => {
       token: generateToken(user._id),
     });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ message: "Login failed" });
   }
 };
