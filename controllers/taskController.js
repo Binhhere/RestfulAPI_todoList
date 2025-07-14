@@ -3,7 +3,15 @@ const Task = require("../models/Task");
 // GET: get task
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.user.id });
+    const keyword = req.query.title
+      ? { title: { $regex: req.query.title, $options: "i" } }
+      : {};
+
+    const tasks = await Task.find({
+      user: req.user.id,
+      ...keyword,
+    });
+
     res.status(200).json(tasks);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch tasks" });

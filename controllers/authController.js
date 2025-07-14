@@ -17,13 +17,10 @@ const registerUser = async (req, res) => {
     if (userExists)
       return res.status(400).json({ message: "User already exists" });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPass = await bcrypt.hash(password, salt);
-
     const user = await User.create({
       name,
       email,
-      password: hashedPass,
+      password,
     });
 
     res.status(201).json({

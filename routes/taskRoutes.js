@@ -26,6 +26,12 @@ router.use(verifyToken);
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         schema:
+ *           type: string
+ *         description: Keyword to search by title
  *     responses:
  *       200:
  *         description: List of user tasks

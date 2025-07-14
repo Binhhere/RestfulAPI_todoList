@@ -48,6 +48,7 @@ const verifyToken = require("../middleware/authMiddleware");
  *                 type: string
  *               email:
  *                 type: string
+ *                 format: email
  *               password:
  *                 type: string
  *     responses:
