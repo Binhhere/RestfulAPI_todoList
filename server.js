@@ -32,11 +32,6 @@ app.use("/api/users", userRoutes);
 // Swagger
 setupSwagger(app);
 
-// 404 Handler 
-app.use((req, res, next) => {
-  res.status(404).json({ message: "Route not found" });
-});
-
 // Global Error Handler
 app.use(globalErrorHandler);
 
@@ -45,12 +40,13 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.get("/", (req, res) => {
-  res.send("API is running...");
+// 404 Handler 
+app.use((req, res, next) => {
+  res.status(404).json({ message: "Route not found" });
 });
 
+// Start server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.MODE} mode on port ${PORT}`);
 });
