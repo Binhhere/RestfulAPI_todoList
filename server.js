@@ -29,21 +29,21 @@ app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/users", userRoutes);
 
-// Swagger
-setupSwagger(app);
-
-// Global Error Handler
-app.use(globalErrorHandler);
-
 // Test route
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
+// Swagger
+setupSwagger(app);
+
 // 404 Handler 
 app.use((req, res, next) => {
   res.status(404).json({ message: "Route not found" });
 });
+
+// Global Error Handler
+app.use(globalErrorHandler);
 
 // Start server
 const PORT = process.env.PORT || 3000;
