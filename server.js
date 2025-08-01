@@ -3,17 +3,19 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
+
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
-const setupSwagger = require("./swagger");
 const userRoutes = require("./routes/userRoutes");
+const setupSwagger = require("./swagger");
 const globalErrorHandler = require("./middleware/globalErrorHandler");
 
 dotenv.config();
 
 const app = express();
 
+// connect MongoDB
 connectDB();
 
 // Middleware
@@ -29,15 +31,15 @@ app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/users", userRoutes);
 
-// Test route
+// Route check
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// Swagger
+// Swagger Docs
 setupSwagger(app);
 
-// 404 Handler 
+// 404 error
 app.use((req, res, next) => {
   res.status(404).json({ message: "Route not found" });
 });
@@ -45,7 +47,7 @@ app.use((req, res, next) => {
 // Global Error Handler
 app.use(globalErrorHandler);
 
-// Start server
+// start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.MODE} mode on port ${PORT}`);
