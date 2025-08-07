@@ -18,13 +18,15 @@ const getTasks = async (req, res) => {
   }
 };
 
-// Create: create
+// POST: create task
 const createTask = async (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, startTime, endTime } = req.body;
   try {
     const newTask = await Task.create({
       title,
       description,
+      startTime,
+      endTime,
       user: req.user.id,
     });
     res.status(201).json(newTask);
@@ -33,7 +35,7 @@ const createTask = async (req, res) => {
   }
 };
 
-// PUT: Update a task
+// PUT: update task
 const updateTask = async (req, res) => {
   try {
     const updatedTask = await Task.findOneAndUpdate(
@@ -49,7 +51,7 @@ const updateTask = async (req, res) => {
   }
 };
 
-// DELETE: Remove a task
+// DELETE: remove task
 const deleteTask = async (req, res) => {
   try {
     const deleted = await Task.findOneAndDelete({

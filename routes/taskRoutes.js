@@ -61,6 +61,12 @@ router.get("/", getTasks);
  *                 type: string
  *               description:
  *                 type: string
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
  *     responses:
  *       201:
  *         description: Task created successfully
@@ -99,6 +105,12 @@ router.post("/", createTask);
  *                 type: string
  *               status:
  *                 type: string
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
  *     responses:
  *       200:
  *         description: Task updated successfully
