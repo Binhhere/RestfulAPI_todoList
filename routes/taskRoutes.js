@@ -61,6 +61,9 @@ router.get("/", getTasks);
  *                 type: string
  *               description:
  *                 type: string
+ *               status:
+ *                 type: string
+ *                 enum: [pending, "in progress", completed]
  *               startTime:
  *                 type: string
  *                 format: date-time
@@ -71,9 +74,11 @@ router.get("/", getTasks);
  *       201:
  *         description: Task created successfully
  *       400:
- *         description: Missing required fields
+ *         description: Missing required fields or invalid time range
  *       401:
  *         description: Unauthorized
+ *       409:
+ *         description: Time slot already taken
  */
 router.post("/", createTask);
 
@@ -105,6 +110,7 @@ router.post("/", createTask);
  *                 type: string
  *               status:
  *                 type: string
+ *                 enum: [pending, "in progress", completed]
  *               startTime:
  *                 type: string
  *                 format: date-time
@@ -114,8 +120,12 @@ router.post("/", createTask);
  *     responses:
  *       200:
  *         description: Task updated successfully
+ *       400:
+ *         description: Invalid time range
  *       404:
  *         description: Task not found
+ *       409:
+ *         description: Time slot already taken
  */
 router.put("/:id", updateTask);
 
