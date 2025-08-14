@@ -44,7 +44,7 @@ router.get("/", getTasks);
  * @swagger
  * /api/tasks:
  *   post:
- *     summary: Create a new task
+ *     summary: Create a new task (supports recurrence)
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
@@ -70,9 +70,30 @@ router.get("/", getTasks);
  *               endTime:
  *                 type: string
  *                 format: date-time
+ *               recurrence:
+ *                 type: object
+ *                 description: Recurrence config; omit or set type=none for one-off tasks
+ *                 properties:
+ *                   type:
+ *                     type: string
+ *                     enum: [none, daily, weekly, monthly]
+ *                   every:
+ *                     type: integer
+ *                     minimum: 1
+ *                     default: 1
+ *                   until:
+ *                     type: string
+ *                     format: date-time
+ *                   daysOfWeek:
+ *                     type: array
+ *                     items:
+ *                       type: integer
+ *                       minimum: 0
+ *                       maximum: 6
+ *                     description: Used only when type=weekly; 0=Sun .. 6=Sat
  *     responses:
  *       201:
- *         description: Task created successfully
+ *         description: Task created successfully (or series created)
  *       400:
  *         description: Missing required fields or invalid time range
  *       401:
@@ -86,7 +107,7 @@ router.post("/", createTask);
  * @swagger
  * /api/tasks/{id}:
  *   put:
- *     summary: Update a task by ID
+ *     summary: Update a task by ID (recurrence update not supported)
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
@@ -121,7 +142,7 @@ router.post("/", createTask);
  *       200:
  *         description: Task updated successfully
  *       400:
- *         description: Invalid time range
+ *         description: Invalid time range or unsupported recurrence update
  *       404:
  *         description: Task not found
  *       409:
