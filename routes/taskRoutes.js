@@ -22,7 +22,7 @@ router.use(verifyToken);
  * @swagger
  * /api/tasks:
  *   get:
- *     summary: Get all tasks for the logged-in user
+ *     summary: Get all tasks for logged-in user
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
@@ -44,7 +44,7 @@ router.get("/", getTasks);
  * @swagger
  * /api/tasks:
  *   post:
- *     summary: Create a new task (supports recurrence)
+ *     summary: Create a new task
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
@@ -91,9 +91,10 @@ router.get("/", getTasks);
  *                       minimum: 0
  *                       maximum: 6
  *                     description: Used only when type=weekly; 0=Sun .. 6=Sat
+ *                     example: [2, 5]
  *     responses:
  *       201:
- *         description: Task created successfully (or series created)
+ *         description: Task created successfully
  *       400:
  *         description: Missing required fields or invalid time range
  *       401:
@@ -107,7 +108,12 @@ router.post("/", createTask);
  * @swagger
  * /api/tasks/{id}:
  *   put:
- *     summary: Update a task by ID (recurrence update not supported)
+ *     summary: Update a task by ID
+ *     description: |
+ *       - Toggle single ↔ recurring via `isRecurring` + `recurrence`.
+ *       - When enabling recurrence, `startTime`, `endTime`, and `recurrence.until` are required.
+ *       - When editing a recurring task with new `recurrence`, the whole series is rebuilt.
+ *       - Overlaps return 409.
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
@@ -132,17 +138,41 @@ router.post("/", createTask);
  *               status:
  *                 type: string
  *                 enum: [pending, "in progress", completed]
+ *               isRecurring:
+ *                 type: boolean
+ *                 description: Toggle recurrence for this task. If true, supply valid `recurrence`.
+ *                 example: true
  *               startTime:
  *                 type: string
  *                 format: date-time
  *               endTime:
  *                 type: string
  *                 format: date-time
+ *               recurrence:
+ *                 type: object
+ *                 description: New recurrence config when `isRecurring=true` or when editing a series
+ *                 properties:
+ *                   type:
+ *                     type: string
+ *                     enum: [none, daily, weekly, monthly]
+ *                   every:
+ *                     type: integer
+ *                     minimum: 1
+ *                   until:
+ *                     type: string
+ *                     format: date-time
+ *                   daysOfWeek:
+ *                     type: array
+ *                     items:
+ *                       type: integer
+ *                       minimum: 0
+ *                       maximum: 6
+ *                     description: Used only when type=weekly; 0=Sun .. 6=Sat
  *     responses:
  *       200:
  *         description: Task updated successfully
  *       400:
- *         description: Invalid time range or unsupported recurrence update
+ *         description: Invalid time range or missing required recurrence fields
  *       404:
  *         description: Task not found
  *       409:
